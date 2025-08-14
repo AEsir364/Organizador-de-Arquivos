@@ -1,99 +1,71 @@
-# 📁 Organizador de Arquivos
+# 📂 Organizador de Arquivos Autônomo
 
-Este é um script em **Python** simples e utilitário, projetado para organizar e limpar automaticamente sua pasta de Downloads. Ele classifica os arquivos por tipo de extensão e os move para as pastas correspondentes, tanto as pastas padrão do sistema (como Documentos, Vídeos e Imagens) quanto pastas personalizadas.
+Um script em **Python** projetado para funcionar como um serviço em segundo plano no Windows, organizando e limpando automaticamente sua pasta de Downloads a cada 10 minutos.
 
------
+Ele classifica os arquivos por tipo de extensão e os move para as pastas correspondentes do sistema (Documentos, Vídeos, Imagens) ou para subpastas personalizadas, mantendo seu ambiente de trabalho sempre limpo, sem a necessidade de execução manual.
+
+---
 
 ## ✨ Funcionalidades
 
-  * **Organização Automática:** Classifica arquivos com base em sua extensão.
-  * **Pastas Padrão:** Move arquivos para suas respectivas pastas no sistema Windows:
-      * `Downloads` -\> `Documents` (documentos)
-      * `Downloads` -\> `Music` (músicas)
-      * `Downloads` -\> `Pictures` (fotos)
-      * `Downloads` -\> `Videos` (vídeos)
-  * **Pastas Personalizadas:** Cria e move arquivos para subpastas dentro da própria pasta de Downloads para melhor organização:
-      * `Downloads` -\> `Downloads/Instaladores` (`.exe`, `.msi`)
-      * `Downloads` -\> `Downloads/Compactados` (`.zip`, `.rar`, `.7z`, etc.)
-  * **Organização de ROMs:** Detecta e move automaticamente arquivos de ROMs para subpastas específicas, como:
-      * `Downloads` -\> `Downloads/ROMs/3DS`
-      * `Downloads` -\> `Downloads/ROMs/NDS`
-      * `Downloads` -\> `Downloads/ROMs/SNES`
+* **Execução Autônoma e Discreta:** Roda a cada 10 minutos em segundo plano, sem abrir nenhuma janela de terminal (graças à extensão `.pyw`).
+* **Organização Automática:** Classifica arquivos com base em sua extensão.
+* **Pastas Padrão do Windows:** Move arquivos para suas respectivas pastas de usuário:
+    * `Downloads` -> `Documents` (documentos)
+    * `Downloads` -> `Music` (músicas)
+    * `Downloads` -> `Pictures` (fotos)
+    * `Downloads` -> `Videos` (vídeos)
+* **Pastas Personalizadas:** Cria e move arquivos para subpastas dentro da própria pasta de Downloads para melhor organização:
+    * `Downloads` -> `Downloads/Instaladores` (`.exe`, `.msi`)
+    * `Downloads` -> `Downloads/Compactados` (`.zip`, `.rar`, `.7z`, etc.)
+* **Organização de ROMs:** Detecta e move automaticamente arquivos de ROMs para subpastas específicas por console (3DS, PS1, PS2, PSP, etc.).
 
------
+---
 
-## 🛠️ Como Usar
+## 🚀 Como Usar (Instalação)
 
-1.  Salve o código como um arquivo `.py` (por exemplo, `organizador.py`).
-2.  Coloque o arquivo na sua pasta de Downloads ou em qualquer outro diretório.
-3.  Execute o script com o Python.
+Para fazer o script rodar automaticamente no seu computador, siga estes passos:
 
-<!-- end list -->
+1.  **Baixe o Repositório:** Faça o download ou clone este repositório para uma pasta permanente no seu computador (por exemplo, em `C:/MeusScripts/`).
 
-```bash
-python organizador.py
-```
+2.  **Crie um Atalho:**
+    * Dentro da pasta, encontre o arquivo `organizador.pyw`.
+    * Clique com o botão direito sobre ele e selecione **"Criar atalho"**.
 
-O script vai rodar, criar as pastas se ainda não existirem e mover os arquivos automaticamente, exibindo no terminal quais arquivos foram movidos e para onde.
+3.  **Adicione o Atalho à Inicialização do Windows:**
+    * Pressione as teclas **`Win` + `R`** para abrir a caixa de diálogo "Executar".
+    * Digite `shell:startup` e pressione Enter. Isso abrirá a pasta de inicialização do Windows.
+    * **Mova o atalho** que você criou no passo 2 para dentro desta pasta.
 
------
+Pronto! Agora, toda vez que você ligar o computador, o script `organizador.pyw` será iniciado automaticamente e começará a organizar sua pasta de Downloads a cada 10 minutos, tudo em segundo plano.
+
+---
 
 ## ⚙️ Como Personalizar o Código
 
-Você pode facilmente modificar o script para adicionar ou alterar categorias de arquivos.
+Você pode facilmente modificar o script `organizador.pyw` para adicionar ou alterar categorias de arquivos.
 
-### 1\. Adicionando uma Nova Categoria de Arquivo
+### 1. Adicionando uma Nova Categoria
 
-Para adicionar um novo tipo de arquivo e movê-lo para uma pasta específica, basta editar o dicionário `categorias`.
-
-Por exemplo, para organizar arquivos `.iso` na pasta `Instaladores`, adicione a extensão na lista:
+Para organizar arquivos `.iso` na pasta `Instaladores`, por exemplo, basta editar o dicionário `categorias`:
 
 ```python
 categorias = {
-    # ... outras categorias
+    # ...
     instaladores: [".exe", ".msi", ".iso"], # Adicionei o ".iso" aqui
-    # ... outras categorias
+    # ...
 }
 ```
 
-### 2\. Adicionando uma Nova Pasta e Categoria
+### 2. Modificando as Pastas de ROMs
 
-Se você quiser criar uma nova pasta para um tipo de arquivo que ainda não existe no script, siga estes passos:
-
-**a.** Crie uma nova variável para o caminho da pasta:
-
-```python
-# No início do arquivo, junto com as outras pastas personalizadas
-designs = os.path.join(downloads, "Designs")
-```
-
-**b.** Adicione a nova pasta para ser criada no loop `for`:
-
-```python
-# No loop de criacao de pastas
-for pasta in [instaladores, compactados, designs, documentos, musicas, fotos, videos]:
-    os.makedirs(pasta, exist_ok=True)
-```
-
-**c.** Adicione a nova pasta e suas extensões ao dicionário `categorias`:
-
-```python
-categorias = {
-    designs: [".psd", ".ai", ".svg", ".fig"], # Nova categoria para designs
-    # ... outras categorias
-}
-```
-
-### 3\. Modificando as Pastas de ROMs
-
-O processo é o mesmo para as ROMs. Para adicionar suporte a novas plataformas, edite o dicionário `roms_subpastas`:
+Para adicionar suporte a novas plataformas, edite o dicionário `roms_subpastas`:
 
 ```python
 roms_subpastas = {
     "3DS": [".3ds", ".cia"],
     "NDS": [".nds"],
-    "SNES": [".smc", ".sfc"],
-    "GBA": [".gba"], # Adicionei suporte para Game Boy Advance
-    "PS2": [".iso"], # Adicionei suporte para PlayStation 2
+    # ...
+    "GBA": [".gba"], # Exemplo: Adicionando suporte para Game Boy Advance
 }
 ```
